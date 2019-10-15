@@ -1,0 +1,138 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            setInterval(function () {
+                getMensajes();
+            }, 5000);
+
+             $("#mensaje").keypress(function(e) {
+                 if (e.which == 13) {
+                     enviar();
+        }
+      });
+        });
+
+        function getMensajes() {
+             $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{}',
+                    url: "@Url.Action("Recibir", "Chat")",
+                    dataType: "json",
+                    success: function (response) {
+                        var data = $("#divMensajes").html();
+                        $("#divMensajes").html(data + "<br>" + response);
+
+                    },
+                    error: function (response) {
+
+                    }
+                });
+        }
+
+          function fin() {
+              var idReg = $("#traza").val();
+             $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{"idReg":' + idReg +'}',
+                    url: "@Url.Action("finChat")",
+                    dataType: "json",
+                    success: function (response) {
+                        location.href = "@Url.Action("Registro")";
+                    },
+                    error: function (response) {
+
+                    }
+                });
+        }
+
+             function enviar() {
+
+                var Mensaje = $("#mensaje").val();
+                var traza = $("#traza").val();
+                var data = $("#divMensajes").html();
+                var usr = "@Session["usrname"].ToString()";
+
+                 //Mensaje = usr + ": " +Mensaje;
+
+                 $("#divMensajes").html(data + "<br>"+Mensaje);
+
+                $("#mensaje").val("");
+
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{"mensaje":"' + Mensaje + '","traza":"' + traza + '"}',
+                    url: "@Url.Action("EnviarMensaje")",
+                    dataType: "json",
+                    success: function (response) {
+                        var data = $("#divMensajes").html();
+                        $("#divMensajes").html(data + "<br> " + usr + ": " + Mensaje);
+                    },
+                    error: function (response) {
+
+                    }
+                });
+            }
+    </script>
+</head>
+<body>
+
+    <nav class="nav navbar-default">
+        <div class="navbar-brand">
+            <span style="float:right;">
+                Bienvenido(a) @Session["usrname"].ToString()
+            </span>
+        </div>
+    </nav>
+
+    <div class="col-md-6">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Mensajes:
+                </div>
+                <div class="panel-footer pre-scrollable" style="min-height:250px;">
+                    <div id="divMensajes">
+
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="traza" value="@Session["usrid"].ToString()">
+
+            <input id="mensaje" class="form-control" placeholder="Escribe tu mensaje" />
+            <button type="button" class="btn btn-primary" onclick="enviar()">Enviar</button>
+
+
+
+
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+
+            <div class="col">
+                <button type="button" class="btn btn-danger" onclick="fin()">Finalizar</button>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

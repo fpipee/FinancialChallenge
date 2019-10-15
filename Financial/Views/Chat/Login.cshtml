@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</head>
+<body>
+
+    <nav class="nav navbar-default">
+        <div class="navbar-brand">
+            Ingreso Asesor
+        </div>
+    </nav>
+
+    @using (Html.BeginForm())
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+
+                </div>
+                <div class="col-md-4">
+                    @if (ViewData["status"] != null)
+                    {
+                        if (ViewData["status"].ToString().Equals("1"))
+                        {
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    @ViewData["msg"].ToString()
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="panel panel-danger">
+                                <div class="panel-heading">
+                                    @ViewData["msg"].ToString()
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="panel-title">Log in</div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label class="txtpassword">Password</label>
+                                <input type="password" name="txtpassword" id="txtpassword" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    }
+
+
+</body>
+</html>

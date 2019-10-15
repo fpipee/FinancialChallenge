@@ -1,0 +1,36 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registro</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        <div class="container">
+            <h2>Ingreso</h2>
+
+            <div class="row">
+                <input name="name" class="form-control" placeholder="ingrese su nombre" />
+            </div>
+
+            <div class="row">
+                <input name="email" class="form-control" placeholder="ingrese su email" />
+            </div>
+
+            <div class="row">
+                <button type="submit" class="btn btn-primary">Enviar</button>
+            </div>
+        </div>
+    }
+</body>
+</html>

@@ -1,0 +1,175 @@
+﻿
+@{
+    Layout = null;
+}
+@model IEnumerable<Financial.Models.Modelreg>
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>IndexAttender</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script>
+          $(document).ready(function () {
+        $('#chat').hide();
+
+
+            setInterval(function () {
+                getMensajes();
+            }, 1000);
+
+                 $("#mensaje").keypress(function(e) {
+                 if (e.which == 13) {
+                     enviar();
+                     }
+                     });
+          });
+
+        function getMensajes() {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{}',
+                    url: "@Url.Action("Recibir", "Chat")",
+                    dataType: "json",
+                    success: function (response) {
+                        var data = $("#divMensajes").html();
+                        $("#divMensajes").html(data + "<br>" + response);
+
+                    },
+                    error: function (response) {
+
+                    }
+                });
+        }
+           function Atender(traza, IdReg) {
+        var traza = traza;
+               $("#traza").val(traza);
+               $("#regid").val(IdReg);
+
+               actualizarFuncionario(IdReg);
+                $('#chat').show();
+               $("#lista").hide();
+
+
+        }
+
+        function fin() {
+              var idReg = $("#regid").val();
+             $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{"idReg":' +  idReg  +'}',
+                    url: "@Url.Action("finChat")",
+                    dataType: "json",
+                 success: function (response) {
+                     location.reload();
+                    },
+                    error: function (response) {
+
+                    }
+                });
+        }
+        function actualizarFuncionario(idReg) {
+
+                 $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{"idReg":' +  idReg +'}',
+                    url: "@Url.Action("ActualizarFuncionario")",
+                    dataType: "json",
+                    success: function (response) {
+
+                    },
+                    error: function (response) {
+
+                    }
+                });
+        }
+
+     function enviar() {
+           var Mensaje = $("#mensaje").val();
+           var traza =  $("#traza").val();
+         var data = $("#divMensajes").html();
+         var usr = "@Session["usrname"].ToString()";
+
+         //Mensaje = usr + ": " + Mensaje;
+         
+
+         $("#divMensajes").html(data + "<br> " +  Mensaje);
+           $("#mensaje").val("");
+
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: '{"mensaje":"' + Mensaje + '","traza":"'+traza+'"}',
+                    url: "@Url.Action("EnviarMensaje")",
+                    dataType: "json",
+                    success: function (response) {
+                        var data = $("#divMensajes").html();
+                       $("#divMensajes").html(data + "<br> " +usr+": " + Mensaje);
+                    },
+                    error: function (response) {
+
+                    }
+                });
+    }
+    </script>
+
+</head>
+<body>
+    <nav class="nav navbar-default">
+        <div class="navbar-brand">
+            <span style="float:right;">
+                Bienvenido(a) @Session["usrname"].ToString()
+            </span>
+        </div>
+    </nav>
+    <div class="pre-scrollable" id="lista">
+        <ul class="list-group">
+            <h3>Listado de Personas Sin Atender:</h3>
+
+            @foreach (var item in Model)
+            {
+                <li class="list-group-item">
+                    <div class="row">
+                        <h4 style="margin-left: 12px; margin-right: 20px;"> @Html.DisplayFor(modelItem => item.name) </h4>
+                        <button class="btn btn-primary" onclick="Atender('@Html.DisplayFor(modelItem => item.email)', '@Html.DisplayFor(modelItem => item.Id)');">Atender</button>
+                    </div>
+                </li>
+            }
+
+        </ul>
+    </div>
+
+    <div id="chat">
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        Mensajes:
+                    </div>
+                    <div class="pre-scrollable panel-footer" style="min-height:250px;">
+                        <div id="divMensajes">
+
+                        </div>
+                    </div>
+                </div>
+                <input id="mensaje" class="form-control" placeholder="Escribe tu mensaje" />
+                <button type="button" class="btn btn-primary" onclick="enviar()">Enviar</button>
+
+            </div>
+        </div>
+        <input type="hidden" id="traza">
+        <input type="hidden" id="regid">
+
+        <button type="button" class="btn btn-danger" onclick="fin()">Finalizar</button>
+
+
+    </div>
+
+</body>
+</html>
