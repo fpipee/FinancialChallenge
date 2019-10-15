@@ -24,4 +24,4 @@ in the solution replace the Web.config
   and run
 
 
-See Sample.pdf about how it works!
+See Use Sample.pdf about how it works!
