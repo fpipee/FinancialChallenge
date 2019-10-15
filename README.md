@@ -1,4 +1,3 @@
-# FinancialChallenge
 # Completed
 ● Allow registered users to log in and talk with other users in a chatroom.
 
@@ -14,5 +13,14 @@ the chatroom using a message broker like RabbitMQ. The message will be a stock q
 using the following format: “APPL.US quote is $93.42 per share”. The post owner will be
 the bot.
 
-Steps to setting 
-Create a Database call challenge, then run the scripts
+# Steps to setting 
+Create a Database call "challenge", then run the scripts in order structure.sql later data.sql
+
+in the solution replace the Web.config
+  <connectionStrings>
+    <add name="conn" connectionString="server="name of yourserver"; database=challenge ; integrated security = true" />
+  </connectionStrings>
+  
+  and run
+
+
